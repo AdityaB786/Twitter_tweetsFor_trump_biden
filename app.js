@@ -110,15 +110,13 @@ app.get('/run-script', async (req, res) => {
   
       console.log("Data saved to MongoDB successfully.");
   
-      // Fetch the saved MongoDB record
       const record = await collection.findOne({ _id: uniqueId });
   
-      // Send back the record along with trends, date_time, and ip_address
       res.json({
         trends,
         date_time: dateTime,
         ip_address: `The IP address used for this query was: ${ipAddress}`,
-        mongoRecord: record, // Send the full MongoDB record
+        mongoRecord: record, 
       });
   
     } catch (error) {
