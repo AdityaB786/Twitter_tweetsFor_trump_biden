@@ -48,6 +48,15 @@
       display: none;
       text-align: center;
     }
+
+    pre {
+      background-color: #f4f4f9;
+      padding: 15px;
+      border-radius: 5px;
+      width: 80%;
+      max-width: 600px;
+      overflow-x: auto;
+    }
   </style>
 </head>
 <body>
@@ -57,13 +66,20 @@
 
   <div id="loading" class="loading">Loading...</div>
   <div id="result" class="result" style="display: none;"></div>
+  <div id="mongoRecord" class="result" style="display: none;">
+    <h3>MongoDB Record:</h3>
+    <pre id="jsonRecord"></pre>
+  </div>
 
   <script>
     document.getElementById('generateButton').addEventListener('click', async () => {
       const resultDiv = document.getElementById('result');
       const loadingDiv = document.getElementById('loading');
+      const mongoRecordDiv = document.getElementById('mongoRecord');
+      const jsonRecord = document.getElementById('jsonRecord');
       resultDiv.style.display = 'none';
       loadingDiv.style.display = 'block';
+      mongoRecordDiv.style.display = 'none';
 
       try {
         const response = await fetch('/run-script');
@@ -71,18 +87,23 @@
 
         loadingDiv.style.display = 'none';
         resultDiv.style.display = 'block';
+        mongoRecordDiv.style.display = 'block';
 
         if (data.error) {
           resultDiv.innerHTML = `<strong>Error:</strong> ${data.error}`;
         } else {
           resultDiv.innerHTML = `
             <h3>Trending Topics</h3>
-            <p><strong>These are the most happening topics as on ${new Date(data.date_time).toLocaleString()}</strong></p>
+            <p><strong>These are the most happening topics as of ${new Date(data.date_time).toLocaleString()}</strong></p>
             <ul>
               ${data.trends.map(trend => `<li>${trend}</li>`).join('')}
             </ul>
             <p><strong>IP Address:</strong> ${data.ip_address}</p>
           `;
+          
+          // Display MongoDB record
+          const mongoRecord = data.mongoRecord;
+          jsonRecord.textContent = JSON.stringify(mongoRecord, null, 2);
         }
       } catch (error) {
         loadingDiv.style.display = 'none';
