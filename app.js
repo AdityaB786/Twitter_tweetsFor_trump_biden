@@ -11,15 +11,16 @@ const app = express();
 const port = process.env.PORT || 3000;
 const cookiesPath = 'cookies.json';
 
-// Serve static files
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Endpoint to trigger the scraping process
 app.get('/run-script', async (req, res) => {
   let ipAddress = 'Unknown';
   try {
+    // Log the IP Address
     const response = await axios.get('https://api.ipify.org?format=json');
     ipAddress = response.data.ip;
+    console.log("Client IP Address:", ipAddress);
   } catch (error) {
     console.error('Error fetching IP address:', error);
   }
@@ -33,7 +34,7 @@ app.get('/run-script', async (req, res) => {
     await page.goto('https://x.com/login', { waitUntil: 'networkidle2' });
 
     if (fs.existsSync(cookiesPath)) {
-      const cookies = JSON.parse(fs.readFileSync(cookiesPath,'utf8'));
+      const cookies = JSON.parse(fs.readFileSync(cookiesPath, 'utf8'));
       await page.setCookie(...cookies);
     }
 
@@ -115,6 +116,8 @@ app.get('/run-script', async (req, res) => {
 
     const record = await collection.findOne({ _id: uniqueId });
 
+    // Sending the final response with the extracted trends
+    res.setHeader('Content-Type', 'application/json');
     res.json({
       trends,
       date_time: dateTime,
@@ -123,9 +126,9 @@ app.get('/run-script', async (req, res) => {
     });
 
   } catch (error) {
-    console.error("An error occurred during the scraping process:", error);
+    console.error("An error occurred:", error);
     await page.screenshot({ path: 'error_screenshot.png' });
-    return res.status(500).json({ error: "Scraping failed. Check server logs and screenshot for details." });
+    res.status(500).json({ error: "Scraping failed. Check server logs and screenshot for details." });
   } finally {
     console.log("Closing browser...");
     await browser.close();
