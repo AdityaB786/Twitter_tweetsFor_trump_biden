@@ -11,6 +11,7 @@ const app = express();
 const port = process.env.PORT || 3000;
 const cookiesPath = 'cookies.json';
 
+// Serve static files
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Endpoint to trigger the scraping process
