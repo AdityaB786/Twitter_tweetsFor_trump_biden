@@ -30,7 +30,7 @@ app.get('/run-script', async (req, res) => {
       await page.goto('https://x.com/login', { waitUntil: 'networkidle2' });
   
       if (fs.existsSync(cookiesPath)) {
-        const cookies = JSON.parse(fs.readFileSync(cookiesPath, 'utf8'));
+        const cookies = JSON.parse(fs.readFileSync(cookiesPath,'utf8'));
         await page.setCookie(...cookies);
       }
   
