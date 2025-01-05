@@ -5,6 +5,7 @@ const fs = require('fs');
 const { MongoClient } = require('mongodb');
 const { v4: uuidv4 } = require('uuid');
 const axios = require('axios');
+require('dotenv').config();
 
 const app = express();
 const port = 3000;
@@ -35,12 +36,12 @@ app.get('/run-script', async (req, res) => {
   
       console.log("Entering login credentials...");
       await page.waitForSelector('input[name="text"]', { timeout: 20000 });
-      await page.type('input[name="text"]', 'sahajbhati31299');
+      await page.type('input[name="text"]', process.env.USERNAME);
       await page.keyboard.press('Enter');
   
       console.log("Waiting for password input...");
       await page.waitForSelector('input[name="password"]', { timeout: 20000 });
-      await page.type('input[name="password"]', 'sahaj123');
+      await page.type('input[name="password"]', process.env.PASSWORD);
       await page.keyboard.press('Enter');
   
       console.log("Waiting for successful login...");
