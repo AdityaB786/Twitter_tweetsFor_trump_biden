@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 
 
 ---
@@ -64,3 +65,7 @@ MongoDB stores data as follows:
   "ip_address": "45.118.157.49"
 }
 ```
+=======
+# Twitter_tweetsFor_trump_biden
+Scrapes the latest tweets from twitter for Trump , Biden or both.
+>>>>>>> 8a34ba77ee09ea5b1071bd4b85e94a392e08df70
