@@ -1,117 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Twitter Trend Scraper</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      background-color: #f4f4f9;
-    }
-
-    h1 {
-      margin-bottom: 20px;
-    }
-
-    button {
-      padding: 10px 20px;
-      font-size: 16px;
-      cursor: pointer;
-      background-color: #1DA1F2;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      transition: background-color 0.3s ease;
-    }
-
-    button:hover {
-      background-color: #1991db;
-    }
-
-    .result {
-      margin-top: 20px;
-      padding: 15px;
-      background-color: #fff;
-      border-radius: 5px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-      width: 80%;
-      max-width: 600px;
-    }
-
-    .loading {
-      display: none;
-      text-align: center;
-    }
-
-    pre {
-      background-color: #f4f4f9;
-      padding: 15px;
-      border-radius: 5px;
-      width: 80%;
-      max-width: 600px;
-      overflow-x: auto;
-    }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <h1>Twitter Trending Topics Scraper</h1>
-  <button id="generateButton">Generate Trends</button>
+  <header>
+    <h1><u>Trending Tweets</u> <i class="fa-brands fa-twitter"></i></h1>
+  </header>
 
-  <div id="loading" class="loading">Loading...</div>
-  <div id="result" class="result" style="display: none;"></div>
-  <div id="mongoRecord" class="result" style="display: none;">
-    <h3>MongoDB Record:</h3>
-    <pre id="jsonRecord"></pre>
+  <div class="buttons-container">
+    <button id="fetchTweetsBoth">Both</button>
+    <button id="fetchTweetsTrump">Trump</button>
+    <button id="fetchTweetsBiden">Biden</button>
   </div>
 
-  <script>
-    document.getElementById('generateButton').addEventListener('click', async () => {
-      const resultDiv = document.getElementById('result');
-      const loadingDiv = document.getElementById('loading');
-      const mongoRecordDiv = document.getElementById('mongoRecord');
-      const jsonRecord = document.getElementById('jsonRecord');
-      resultDiv.style.display = 'none';
-      loadingDiv.style.display = 'block';
-      mongoRecordDiv.style.display = 'none';
+  <div id="loading" class="loading-message">Loading...</div>
 
-      try {
-        const response = await fetch('/run-script');
-        const data = await response.json();
+  <div id="tweetsContainer" class="tweets-container"></div>
 
-        loadingDiv.style.display = 'none';
-        resultDiv.style.display = 'block';
-        mongoRecordDiv.style.display = 'block';
-
-        if (data.error) {
-          resultDiv.innerHTML = `<strong>Error:</strong> ${data.error}`;
-        } else {
-          resultDiv.innerHTML = `
-            <h3>Trending Topics</h3>
-            <p><strong>These are the most happening topics as of ${new Date(data.date_time).toLocaleString()}</strong></p>
-            <ul>
-              ${data.trends.map(trend => `<li>${trend}</li>`).join('')}
-            </ul>
-            <p><strong>IP Address:</strong> ${data.ip_address}</p>
-          `;
-          
-          // Display MongoDB record
-          const mongoRecord = data.mongoRecord;
-          jsonRecord.textContent = JSON.stringify(mongoRecord, null, 2);
-        }
-      } catch (error) {
-        loadingDiv.style.display = 'none';
-        resultDiv.style.display = 'block';
-        resultDiv.innerHTML = `<strong>Error:</strong> ${error.message}`;
-      }
-    });
-  </script>
-
+  <script src="script.js"></script>
 </body>
 </html>
